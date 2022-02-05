@@ -7,7 +7,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 from PIL import Image
 from pytesseract import pytesseract
-from instapy_cli import client
+from instabot import Bot
 import requests
 from io import BytesIO
 import urllib.request
@@ -19,7 +19,7 @@ Insta_UserName = "qjvmhpskpmsee3m"
 Insta_Password = "7GCg4U3mVctLk53"
 
 ## 
-
+bot = Bot()
 options = Options()
 options.headless = False
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
@@ -56,3 +56,5 @@ img.retrieve(img_src, "nft.png")
 Insta_ImageToSend = Image.open("nft.png")
 #with client(Insta_UserName, Insta_Password) as cli:
 #    cli.upload(file=Insta_ImageToSend, caption=Insta_TextToSend)
+bot.login(username = Insta_UserName, password = Insta_Password)
+bot.upload_photo("nft.png", caption=Insta_TextToSend)
