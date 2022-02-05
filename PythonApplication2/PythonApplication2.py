@@ -7,7 +7,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 from PIL import Image
 from pytesseract import pytesseract
-from instabot import Bot
+from instagrapi import Client
 import requests
 from io import BytesIO
 import urllib.request
@@ -19,7 +19,6 @@ Insta_UserName = "qjvmhpskpmsee3m"
 Insta_Password = "7GCg4U3mVctLk53"
 
 ## 
-bot = Bot()
 options = Options()
 options.headless = False
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
@@ -44,17 +43,27 @@ for i in nft:
 priceimage = Image.open("pricess")
 descimage = Image.open("descss")
 
-pytesseract.tesseract_cmd="C:/Program Files/Tesseract-OCR/tesseract.exe"
+print(img_src)
+
 NFT_Description = pytesseract.image_to_string(descimage)
 NFT_Price = pytesseract.image_to_string(priceimage)
 
 ## Send as Instagram Post
 
-Insta_TextToSend = "Name: " + NFT_Description + "Price: " + NFT_Price
+Insta_TextToSend = "Name: ", NFT_Description, "Price: ", NFT_Price
 img = urllib.request.URLopener()
-img.retrieve(img_src, "nft.png")
-Insta_ImageToSend = Image.open("nft.png")
-#with client(Insta_UserName, Insta_Password) as cli:
-#    cli.upload(file=Insta_ImageToSend, caption=Insta_TextToSend)
-bot.login(username = Insta_UserName, password = Insta_Password)
-bot.upload_photo("nft.png", caption=Insta_TextToSend)
+img.retrieve(img_src, "nft.jpg")
+Insta_ImageToSend = "nft.jpg"
+
+
+# Running bot
+
+cl = Client()
+cl.login(Insta_UserName,Insta_Password)
+
+
+media = cl.photo_upload(
+    Insta_ImageToSend,
+    Insta_TextToSend)
+
+ 
