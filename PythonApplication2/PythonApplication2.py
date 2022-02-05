@@ -31,4 +31,3 @@ descimg = Image.open(descss)
 pytesseract.tesseract_cmd="C:/Program Files/Tesseract-OCR/tesseract.exe"
 pricetext = pytesseract.image_to_string(priceimg)
 desctext = pytesseract.image_to_string(descimg)
-print(pricetext)
