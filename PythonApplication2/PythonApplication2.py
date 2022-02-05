@@ -51,7 +51,8 @@ NFT_Price = pytesseract.image_to_string(priceimage)
 ## Send as Instagram Post
 
 Insta_TextToSend = "Name: " + NFT_Description + "Price: " + NFT_Price
-
+img = urllib.request.URLopener()
+img.retrieve(img_src, "nft.png")
 Insta_ImageToSend = Image.open("nft.png")
 #with client(Insta_UserName, Insta_Password) as cli:
 #    cli.upload(file=Insta_ImageToSend, caption=Insta_TextToSend)
