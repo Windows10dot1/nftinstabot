@@ -11,12 +11,15 @@ from instagrapi import Client
 import requests
 from io import BytesIO
 import urllib.request
-import numpy as np
+import requests
 
 # Instagram Login
 
-Insta_UserName = "qjvmhpskpmsee3m"
-Insta_Password = "7GCg4U3mVctLk53"
+Insta_UserName = "hundennnn"
+Insta_Password = "okayokayokay"
+
+# Insta_UserName = "qjvmhpskpmsee3m"
+# Insta_Password = "7GCg4U3mVctLk53"
 
 
 # Chrome Options
@@ -65,9 +68,23 @@ def fetch_data():
         ## Instagram Setup
 
         Insta_TextToSend = "Name: ", NFT_Description, "Price: ", NFT_Price
+
+
+
         img = urllib.request.URLopener()
         img.retrieve(img_src, "nft.jpg")
         Insta_ImageToSend = "nft.jpg"
+
+
+        # response = requests.get(img_src)
+        # print(response.content)
+        # im = BytesIO(response.content)
+        
+        # print(im)
+
+
+        # im = Image.open(requests.get(img_src, stream=True).raw)
+        # Insta_ImageToSend = im
 
     except Exception as err:
         raise SystemExit(err) 
@@ -83,6 +100,7 @@ def send_to_insta():
         cl = Client()
         cl.login(Insta_UserName,Insta_Password)
 
+        # cl.login_by_sessionid("51342869820%3AMvDTG3YRGnvAM1%3A27")
 
         media = cl.photo_upload(Insta_ImageToSend, Insta_TextToSend)
 
@@ -92,4 +110,4 @@ def send_to_insta():
 
 if __name__ == "__main__":
     fetch_data()
-    # send_to_insta()
+    send_to_insta()
