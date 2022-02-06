@@ -12,14 +12,12 @@ import requests
 from io import BytesIO
 import urllib.request
 import requests
+import cv2
 
 # Instagram Login
 
-Insta_UserName = "hundennnn"
-Insta_Password = "okayokayokay"
-
-# Insta_UserName = "qjvmhpskpmsee3m"
-# Insta_Password = "7GCg4U3mVctLk53"
+Insta_UserName = "bitganggggggsafasf"
+Insta_Password = "asdasfasgasgasgdasd4124124"
 
 
 # Chrome Options
@@ -35,7 +33,6 @@ def fetch_data():
 
 
     global Insta_TextToSend
-    global Insta_ImageToSend
 
     try:
 
@@ -55,10 +52,10 @@ def fetch_data():
             image = i.find_element_by_tag_name("img")
             img_src = str(image.get_attribute("src"))
 
+        driver.close()
+
         priceimage = Image.open("pricess")
         descimage = Image.open("descss")
-
-        img_src = img_src
 
 
         NFT_Description = pytesseract.image_to_string(descimage)
@@ -67,24 +64,15 @@ def fetch_data():
 
         ## Instagram Setup
 
-        Insta_TextToSend = "Name: ", NFT_Description, "Price: ", NFT_Price
-
-
-
+        text = NFT_Description + ", Price: " + NFT_Price + " ETH"
         img = urllib.request.URLopener()
         img.retrieve(img_src, "nft.jpg")
-        Insta_ImageToSend = "nft.jpg"
+        im2 = Image.open('nft.jpg').resize((1080,1340))
+        im2.save('nft2.jpg')
+        Insta_TextToSend = text.replace("\n\x0c","")
 
-
-        # response = requests.get(img_src)
-        # print(response.content)
-        # im = BytesIO(response.content)
         
-        # print(im)
 
-
-        # im = Image.open(requests.get(img_src, stream=True).raw)
-        # Insta_ImageToSend = im
 
     except Exception as err:
         raise SystemExit(err) 
@@ -100,12 +88,15 @@ def send_to_insta():
         cl = Client()
         cl.login(Insta_UserName,Insta_Password)
 
-        # cl.login_by_sessionid("51342869820%3AMvDTG3YRGnvAM1%3A27")
+        print(Insta_TextToSend)
 
-        media = cl.photo_upload(Insta_ImageToSend, Insta_TextToSend)
+        cl.photo_upload("nft2.jpg", Insta_TextToSend)
 
-    except Exception as err:
-        raise SystemExit(err) 
+
+
+    except Exception as e:
+        raise SystemExit(e)
+
 
 
 if __name__ == "__main__":
