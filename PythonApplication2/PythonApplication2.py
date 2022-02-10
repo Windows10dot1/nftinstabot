@@ -25,7 +25,7 @@ Insta_Password = "asdasfasgasgasgdasd4124124"
 options = Options()
 options.headless = False
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
-# pytesseract.tesseract_cmd="C:/Program Files/Tesseract-OCR/tesseract.exe"
+pytesseract.tesseract_cmd="C:/Program Files/Tesseract-OCR/tesseract.exe"
 
 
 
@@ -67,9 +67,15 @@ def fetch_data():
         text = NFT_Description + ", Price: " + NFT_Price + " ETH"
         img = urllib.request.URLopener()
         img.retrieve(img_src, "nft.jpg")
-        im2 = Image.open('nft.jpg').resize((1080,1340))
-        im2.save('nft2.jpg')
-        Insta_TextToSend = text.replace("\n\x0c","")
+        #im2 = Image.open('nft.jpg').resize((1080,1340))
+        #im2.save('nft2.jpg')
+        new_width = 1080
+        im = Image.open("nft.jpg")
+        concat = int(new_width/float(im.size[0]))
+        size = int((float(im.size[1])*float(concat)))
+        resized_im = im.resize((new_width,size), Image.ANTIALIAS).convert('RGB')
+        resized_im.save('nft2.jpg')
+        Insta_TextToSend = text.replace("\n\x0c","").replace("\n","")
 
         
 
