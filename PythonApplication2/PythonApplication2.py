@@ -13,6 +13,8 @@ from io import BytesIO
 import urllib.request
 import requests
 import cv2
+import os
+
 
 # Instagram Login
 
@@ -25,8 +27,12 @@ Insta_Password = "asdasfasgasgasgdasd4124124"
 options = Options()
 options.headless = False
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
-pytesseract.tesseract_cmd="C:/Program Files/Tesseract-OCR/tesseract.exe"
 
+
+if os.name == 'nt':
+    pytesseract.tesseract_c md="C:/Program Files/Tesseract-OCR/tesseract.exe"
+else:
+    pass
 
 
 def fetch_data():
@@ -64,11 +70,9 @@ def fetch_data():
 
         ## Instagram Setup
 
-        text = NFT_Description + ", Price: " + NFT_Price + " ETH"
+        text = NFT_Description + ", Price: " + NFT_Price + " ETH ⧫" 
         img = urllib.request.URLopener()
         img.retrieve(img_src, "nft.jpg")
-        #im2 = Image.open('nft.jpg').resize((1080,1340))
-        #im2.save('nft2.jpg')
         new_width = 1080
         im = Image.open("nft.jpg")
         concat = int(new_width/float(im.size[0]))
