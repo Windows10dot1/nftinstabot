@@ -4,7 +4,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By 
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-import time
+from time import sleep
 from PIL import Image
 from pytesseract import pytesseract
 from instagrapi import Client
@@ -14,12 +14,13 @@ import urllib.request
 import requests
 import cv2
 import os
+import sys
 
 
 # Instagram Login
 
-Insta_UserName = "bitganggggggsafasf"
-Insta_Password = "asdasfasgasgasgdasd4124124"
+Insta_UserName = "asdasfsagghih2ghri"
+Insta_Password = "asfkjashgagsffwqkjhfiqwk24124"
 
 
 # Chrome Options
@@ -30,27 +31,26 @@ driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
 
 if os.name == 'nt':
-    pytesseract.tesseract_c md="C:/Program Files/Tesseract-OCR/tesseract.exe"
+    pytesseract.tesseract_cmd="C:/Program Files/Tesseract-OCR/tesseract.exe"
 else:
     pass
 
 
 def fetch_data():
 
-
     global Insta_TextToSend
 
     try:
 
-        ## Fetch information from opensea.io
+        # Fetch information from opensea.io
 
         driver.get("https://opensea.io/assets?search[sortAscending]=false&search[sortBy]=LISTING_DATE")
-        time.sleep(4)
+        sleep(4)
         nft = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div/main/div/div/div[3]/div[2]/div[2]/div/div/div[1]")
 
         try:
-            price = driver.find_element_by_xpath('//*[@id="main"]/div/div/div[3]/div[2]/div[2]/div/div/div[1]/div/article/a/div[2]/div/div[2]/div[1]/div/div[2]').screenshot("pricess")
-            desc = driver.find_element_by_xpath('//*[@id="main"]/div/div/div[3]/div[2]/div[2]/div/div/div[1]/div/article/a/div[2]/div/div[1]/div[2]').screenshot("descss")
+            price = driver.find_element_by_xpath('//*[@id="main"]/div/div/div[3]/div[2]/div[2]/div/div/div[1]/div/article/a/div[2]/div/div[2]/div[1]/div/div[2]').screenshot("pricess.png")
+            desc = driver.find_element_by_xpath('//*[@id="main"]/div/div/div[3]/div[2]/div[2]/div/div/div[1]/div/article/a/div[2]/div/div[1]/div[2]').screenshot("descss.png")
         except:
             pass
 
@@ -60,32 +60,41 @@ def fetch_data():
 
         driver.close()
 
-        priceimage = Image.open("pricess")
-        descimage = Image.open("descss")
+        priceimage = Image.open("pricess.png")
+        descimage = Image.open("descss.png")
 
 
         NFT_Description = pytesseract.image_to_string(descimage)
         NFT_Price = pytesseract.image_to_string(priceimage)
 
 
-        ## Instagram Setup
+        # Instagram Setup
 
-        text = NFT_Description + ", Price: " + NFT_Price + " ETH ⧫" 
-        img = urllib.request.URLopener()
-        img.retrieve(img_src, "nft.jpg")
+
+        ## Get the image 
+
+        with open('nft.jpg', 'wb') as f:
+            f.write(requests.get(img_src).content)
+
+        ## Optimize the image
+
         new_width = 1080
         im = Image.open("nft.jpg")
         concat = int(new_width/float(im.size[0]))
         size = int((float(im.size[1])*float(concat)))
         resized_im = im.resize((new_width,size), Image.ANTIALIAS).convert('RGB')
         resized_im.save('nft2.jpg')
+
+        ## NFT Description
+
+        text = NFT_Description + " | Price: " + NFT_Price + " ETH ⧫" 
         Insta_TextToSend = text.replace("\n\x0c","").replace("\n","")
 
         
 
-
     except Exception as err:
-        raise SystemExit(err) 
+        pass
+
 
 
 
@@ -105,10 +114,12 @@ def send_to_insta():
 
 
     except Exception as e:
-        raise SystemExit(e)
+        pass
 
 
 
 if __name__ == "__main__":
     fetch_data()
     send_to_insta()
+    sleep(900)
+    os.execv(__file__, sys.argv)
