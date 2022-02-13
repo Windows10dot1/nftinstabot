@@ -9,9 +9,6 @@ from PIL import Image
 from pytesseract import pytesseract
 from instagrapi import Client
 import requests
-from io import BytesIO
-import urllib.request
-import requests
 import cv2
 import os
 import sys
@@ -19,8 +16,15 @@ import sys
 
 # Instagram Login
 
-Insta_UserName = "asdasfsagghih2ghri"
-Insta_Password = "asfkjashgagsffwqkjhfiqwk24124"
+Insta_UserName = "asdafkjgaskdjkagskdgahsjd"
+Insta_Password = "afkjhsaifhwuiqhfiwquhfqw8718297"
+
+try:
+    cl = Client()
+    cl.login(Insta_UserName,Insta_Password)
+except:
+    print("Login error, passing")
+    pass
 
 
 # Chrome Options
@@ -41,6 +45,18 @@ def fetch_data():
     global Insta_TextToSend
 
     try:
+
+        # Generate hashtags
+
+        try:
+            driver.get("https://h.bdir.in/hashtags/search")
+            driver.find_element_by_xpath("/html/body/div[1]/div[1]/div[1]/div[1]/div[2]/div/form/div[1]/input").send_keys('nft')
+            driver.find_element_by_xpath("/html/body/div[1]/div[1]/div[1]/div[1]/div[2]/div/form/div[2]/button").click()
+            hashtags = driver.find_element_by_xpath("/html/body/div[1]/div[1]/div[1]/div[2]/div[2]/div[1]/b").text
+        except:
+            print("Hashtag generation failed.")
+            pass
+
 
         # Fetch information from opensea.io
 
@@ -68,9 +84,6 @@ def fetch_data():
         NFT_Price = pytesseract.image_to_string(priceimage)
 
 
-        # Instagram Setup
-
-
         ## Get the image 
 
         with open('nft.jpg', 'wb') as f:
@@ -85,14 +98,13 @@ def fetch_data():
         resized_im = im.resize((new_width,size), Image.ANTIALIAS).convert('RGB')
         resized_im.save('nft2.jpg')
 
-        ## NFT Description
-
         text = NFT_Description + " | Price: " + NFT_Price + " ETH ⧫" 
         Insta_TextToSend = text.replace("\n\x0c","").replace("\n","")
-
+        Insta_TextToSend = Insta_TextToSend + "\n\n\n\n\n\n\n  +   -------------------   +\n\n\n\n\n" + hashtags
         
 
     except Exception as err:
+        print("Error caught")
         pass
 
 
@@ -103,11 +115,6 @@ def send_to_insta():
     try:
 
         # Launch Bot
-
-        cl = Client()
-        cl.login(Insta_UserName,Insta_Password)
-
-        print(Insta_TextToSend)
 
         cl.photo_upload("nft2.jpg", Insta_TextToSend)
 
